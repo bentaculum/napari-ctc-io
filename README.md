@@ -7,7 +7,10 @@
 [![codecov](https://codecov.io/gh/bentaculum/napari-open-ctc/branch/main/graph/badge.svg)](https://codecov.io/gh/bentaculum/napari-open-ctc)
 [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-open-ctc)](https://napari-hub.org/plugins/napari-open-ctc)
 
-Drag and drop data from the Cell Tracking Challenge (CTC) into napari"
+Drag and drop data from the Cell Tracking Challenge (CTC) into napari
+
+## TODOs
+- Tests
 
 ----------------------------------
 
