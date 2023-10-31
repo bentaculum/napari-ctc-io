@@ -82,20 +82,3 @@ def _check_ctc_tracks(masks: np.ndarray, tracks: np.ndarray):
             print(f"Missing labels in masks at t={t}: {sub_lab-masks_lab}")
             return False
     return True
-
-
-if __name__ == "__main__":
-    # ctc_reader(
-    segmentation, man_track = _load_tra(
-        Path(
-            "/Users/gallusse/data/celltracking/Fluo-N2DL-HeLa/train/01_GT/TRA"
-        )
-    )
-    _check_ctc_tracks(segmentation, man_track)
-    tracks, tracks_graph = _ctc_to_napari_tracks(segmentation, man_track)
-
-    import napari
-
-    v = napari.Viewer()
-    v.add_labels(segmentation)
-    v.add_tracks(data=tracks, graph=tracks_graph)
