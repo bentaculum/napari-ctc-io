@@ -50,20 +50,54 @@ def _ctc_to_napari_tracks(segmentation, man_track):
     return tracks, tracks_graph
 
 
-def _load_tra(path: Path):
-    man_track = path / "man_track.txt"
-    if not man_track.exists():
-        raise ValueError(f"{path} doesnt contain the file man_track.txt !")
+class FoundTracks(Exception):
+    pass
 
+
+def _load_tra(path: Path) -> tuple[np.ndarray, np.ndarray]:
+    """Load segmentation and tracks from a folder.
+
+    Checks for
+    - alphanumerically ordered *.tif files
+    - tracks in txt format, preferably called `man_track.txt` or `res_track.txt`.
+
+    Args:
+        path (Path): Folder with segmentations and tracks.
+
+    Raises:
+        ValueError:
+
+    Returns:
+        np.ndarray: stacked segmentations as T x 2D/3D array
+        np.ndarray: tracks as N x 4 array
+    """
+    tracks_globs = ["man_track.txt", "res_track.txt", "*.txt"]
+
+    try:
+        for _glob in tracks_globs:
+            print(f"Trying to load tracks with `glob {path / _glob}`")
+            for _cand in path.glob(_glob):
+                tracks_file = path / _cand
+                if tracks_file.exists():
+                    tracks = np.loadtxt(tracks_file, delimiter=" ").astype(int)
+                    raise FoundTracks
+    except FoundTracks:
+        print(f"Loaded tracks from {tracks_file}")
+    else:
+        raise ValueError(f"Did not find a .txt file with tracks in {path}.")
+
+    files = sorted(path.glob("*.tif"))
     segmentation = np.stack(
         [
             imread(x)
             for x in tqdm(
-                sorted(path.glob("*.tif")), desc="Loading masks", leave=False
+                files,
+                desc="Loading segmentations",
+                leave=True,
             )
         ]
     )
-    tracks = np.loadtxt(man_track, delimiter=" ").astype(int)
+    print(f"Found {len(segmentation)} .tif files with stem `{files[0].stem}`.")
 
     return segmentation, tracks
 

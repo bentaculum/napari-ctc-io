@@ -26,12 +26,6 @@ def napari_get_reader(path):
     if not path.is_dir():
         return None
 
-    # TODO also allow for dragging on a ground truth folder
-
-    if not (path / "man_track.txt").exists():
-        print("Could not find 'man_track.txt'")
-        return None
-
     # otherwise we return the *function* that can read ``path``.
     return ctc_reader(path)
 
