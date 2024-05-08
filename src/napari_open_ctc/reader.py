@@ -89,13 +89,13 @@ def _load_tra(path: Path) -> tuple[np.ndarray, np.ndarray]:
     try:
         for _glob in tracks_globs:
             print(f"Trying to load tracks with `glob {path / _glob}`")
-            for _cand in path.glob(_glob):
-                tracks_file = path / _cand
-                if tracks_file.exists():
-                    tracks = np.loadtxt(tracks_file, delimiter=" ").astype(int)
+            for fpath in path.glob(_glob):
+                if fpath.exists():
+                    tracks = np.loadtxt(fpath, delimiter=" ").astype(int)
+                    print(fpath, tracks.shape)
                     raise FoundTracks
     except FoundTracks:
-        print(f"Loaded tracks from {tracks_file}")
+        print(f"Loaded tracks from {fpath}")
     else:
         raise ValueError(f"Did not find a .txt file with tracks in {path}.")
 
