@@ -1,5 +1,6 @@
 include LICENSE
 include README.md
+include src/napari_open_ctc/_tests/resources/
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
