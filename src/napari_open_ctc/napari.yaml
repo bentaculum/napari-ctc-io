@@ -8,8 +8,8 @@ contributions:
   commands:
     - id: napari-open-ctc.get_reader
       python_name: napari_open_ctc._reader:napari_get_reader
-      title: Open data with Open CTC data
+      title: Open CTC TRA/RES data
   readers:
     - command: napari-open-ctc.get_reader
       accepts_directories: true
-      filename_patterns: ["TRA"]
+      filename_patterns: ["TRA", "*RES"]

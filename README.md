@@ -7,22 +7,12 @@
 [![codecov](https://codecov.io/gh/bentaculum/napari-open-ctc/branch/main/graph/badge.svg)](https://codecov.io/gh/bentaculum/napari-open-ctc)
 [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-open-ctc)](https://napari-hub.org/plugins/napari-open-ctc)
 
-Drag and drop data from the Cell Tracking Challenge (CTC) into napari
+Drag and drop annotations/results in the [Cell Tracking Challenge (CTC) data format](https://celltrackingchallenge.net) into napari.
 
-## TODOs
-- Tests
+Works for `TRA`, `RES`, etc. folders, which contain a time sequence of segmentations in `tiff` format, and a corresponding tracklet file `*.txt`.
 
-----------------------------------
+## TODO demo video
 
-This [napari] plugin was generated with [Cookiecutter] using [@napari]'s [cookiecutter-napari-plugin] template.
-
-<!--
-Don't miss the full getting started guide to set up your new package:
-https://github.com/napari/cookiecutter-napari-plugin#getting-started
-
-and review the napari docs for plugin developers:
-https://napari.org/stable/plugins/index.html
--->
 
 ## Installation
 

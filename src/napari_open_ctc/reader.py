@@ -1,25 +1,21 @@
-"""
-TODOs
-- add tests
-- add progress bar in the viewer: https://github.com/napari/napari/blob/main/examples/progress_bar_minimal_.py
-- sync colors of tracking and segmentation layers
-- put in the color-by-child layer as well, invisible
-"""
-
+import logging
 from pathlib import Path
 from typing import Callable
 
 import numpy as np
 import pandas as pd
+from napari.utils import progress
 from skimage.measure import label, regionprops_table
 from tifffile import imread
-from tqdm import tqdm
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def ctc_reader(path: Path) -> Callable:
     segmentation, man_track = _load_tra(path)
     tracks, tracks_graph = _ctc_to_napari_tracks(segmentation, man_track)
-    print(tracks.shape)
+    logger.debug(tracks.shape)
     _check_ctc(
         tracks=pd.DataFrame(man_track).astype(int),
         detections=pd.DataFrame(tracks[:, :2]).astype(int),
@@ -34,10 +30,10 @@ def ctc_reader(path: Path) -> Callable:
 def _ctc_to_napari_tracks(
     segmentation: np.ndarray, man_track: np.ndarray
 ) -> tuple[np.ndarray, dict]:
-    """convert a traccuracy graph to napari tracks"""
+    """Convert a traccuracy graph to napari tracks"""
 
     tracks = []
-    for t, frame in tqdm(
+    for t, frame in progress(
         enumerate(segmentation),
         total=len(segmentation),
         leave=True,
@@ -52,7 +48,7 @@ def _ctc_to_napari_tracks(
     tracks = pd.concat(tracks).to_numpy()
 
     tracks_graph = {}
-    for idx, _, _, parent in tqdm(
+    for idx, _, _, parent in progress(
         man_track,
         desc="Converting CTC to napari tracks",
         leave=False,
@@ -88,14 +84,16 @@ def _load_tra(path: Path) -> tuple[np.ndarray, np.ndarray]:
 
     try:
         for _glob in tracks_globs:
-            print(f"Trying to load tracks with `glob {path / _glob}`")
+            logger.debug(
+                f"Trying to load tracks with `glob {path / _glob}`"  # noqa: G004
+            )
             for fpath in path.glob(_glob):
                 if fpath.exists():
                     tracks = np.loadtxt(fpath, delimiter=" ").astype(int)
-                    print(fpath, tracks.shape)
+                    logger.debug(fpath, tracks.shape)
                     raise FoundTracks
     except FoundTracks:
-        print(f"Loaded tracks from {fpath}")
+        logger.info(f"Loaded tracks from {fpath}")  # noqa: G004
     else:
         raise ValueError(f"Did not find a .txt file with tracks in {path}.")
 
@@ -103,7 +101,7 @@ def _load_tra(path: Path) -> tuple[np.ndarray, np.ndarray]:
     segmentation = np.stack(
         [
             imread(x)
-            for x in tqdm(
+            for x in progress(
                 files,
                 desc="Loading segmentations",
                 leave=True,
@@ -142,7 +140,7 @@ def _check_ctc(
         ValueError: If any of the hard checks fail.
     """
 
-    print("Running CTC format checks")
+    logger.info("Running CTC format checks")
     tracks.columns = ["Cell_ID", "Start", "End", "Parent_ID"]
     detections.columns = ["segmentation_id", "t"]
 
@@ -151,7 +149,7 @@ def _check_ctc(
     if len(tracks["Cell_ID"]) < len(tracks["Cell_ID"].unique()):
         raise ValueError("Cell_IDs in tracks file must be unique integers.")
 
-    for _, row in tqdm(
+    for _, row in progress(
         tracks.iterrows(),
         desc="Checking parent links",
     ):
@@ -165,12 +163,13 @@ def _check_ctc(
             ].iloc[0]
             if parent_end >= row["Start"]:
                 raise ValueError(
-                    f"Invalid tracklet connection: Daughter tracklet with ID {row['Cell_ID']} "
-                    f"starts at t={row['Start']}, "
-                    f"but parent tracklet with ID {row['Parent_ID']} only ends at t={parent_end}."
+                    "Invalid tracklet connection: Daughter tracklet with ID"
+                    f" {row['Cell_ID']} starts at t={row['Start']}, but parent"
+                    f" tracklet with ID {row['Parent_ID']} only ends at"
+                    f" t={parent_end}."
                 )
 
-    for t in tqdm(
+    for t in progress(
         range(tracks["Start"].min(), tracks["End"].max()),
         desc="Checking missing IDs",
     ):
@@ -184,16 +183,20 @@ def _check_ctc(
             )
         if not det_ids.issubset(track_ids):
             raise ValueError(
-                f"IDs {det_ids - track_ids} at t={t} not represented in tracks file."
+                f"IDs {det_ids - track_ids} at t={t} not represented in tracks"
+                " file."
             )
 
-    for t, frame in tqdm(
+    for t, frame in progress(
         enumerate(masks),
         desc="Checking for non-connected masks",
+        total=len(masks),
     ):
         _, n_components = label(frame, return_num=True)
         n_labels = len(detections[detections["t"] == t])
         if n_labels < n_components:
-            print(f"{n_components - n_labels} non-connected masks at t={t}.")
+            logger.warning(
+                f"{n_components - n_labels} non-connected masks at t={t}."  # noqa: G004
+            )
 
-    print("Checks completed")
+    logger.info("Checks completed")
