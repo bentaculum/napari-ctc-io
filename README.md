@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/bentaculum/napari-open-ctc/branch/main/graph/badge.svg)](https://codecov.io/gh/bentaculum/napari-open-ctc)
 [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-open-ctc)](https://napari-hub.org/plugins/napari-open-ctc)
 
-Drag and drop annotations/results in the [Cell Tracking Challenge (CTC) data format](https://celltrackingchallenge.net) into napari.
+Drag and drop annotations/results in the [Cell Tracking Challenge (CTC) format](https://celltrackingchallenge.net) into napari.
 
 Works for `TRA`, `RES`, etc. folders, which contain a time sequence of segmentations in `tiff` format, and a corresponding tracklet file `*.txt`.
 
