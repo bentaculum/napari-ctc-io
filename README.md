@@ -1,8 +1,6 @@
 # napari-open-ctc
 
-[![License BSD-3](https://img.shields.io/pypi/l/napari-open-ctc.svg?color=green)](https://github.com/bentaculum/napari-open-ctc/raw/main/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/napari-open-ctc.svg?color=green)](https://pypi.org/project/napari-open-ctc)
-[![Python Version](https://img.shields.io/pypi/pyversions/napari-open-ctc.svg?color=green)](https://python.org)
 [![tests](https://github.com/bentaculum/napari-open-ctc/workflows/tests/badge.svg)](https://github.com/bentaculum/napari-open-ctc/actions)
 [![codecov](https://codecov.io/gh/bentaculum/napari-open-ctc/branch/main/graph/badge.svg)](https://codecov.io/gh/bentaculum/napari-open-ctc)
 [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-open-ctc)](https://napari-hub.org/plugins/napari-open-ctc)
@@ -11,7 +9,7 @@ Drag and drop annotations/results in the [Cell Tracking Challenge (CTC) format](
 
 Works for `TRA`, `RES`, etc. folders, which contain a time sequence of segmentations in `tiff` format, and a corresponding tracklet file `*.txt`.
 
-## TODO demo video
+https://github.com/bentaculum/napari-open-ctc/assets/8866751/197c9ea2-4115-4829-851a-4b77eb843bf2
 
 
 ## Installation
@@ -24,18 +22,18 @@ You can install `napari-open-ctc` via [pip]:
 
 To install latest development version :
 
+
     pip install git+https://github.com/bentaculum/napari-open-ctc.git
 
 
 ## Contributing
 
-Contributions are very welcome. Tests can be run with [tox], please ensure
-the coverage at least stays the same before you submit a pull request.
+Contributions are very welcome. Tests can be run with [tox].
 
 ## License
 
 Distributed under the terms of the [BSD-3] license,
-"napari-open-ctc" is free and open source software
+`napari-open-ctc` is free and open source software.
 
 ## Issues
 
