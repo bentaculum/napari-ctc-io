@@ -83,7 +83,7 @@ jobs:
       - name: Build and publish
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.NAPARI_OPEN_CTC }}
+          TWINE_PASSWORD: ${{ secrets.NAPARI_CTC_IO }}
         run: |
           git tag
           python -m build .
