@@ -1,15 +1,26 @@
 name: napari-open-ctc
 display_name: Open CTC data
-# use 'hidden' to remove plugin from napari hub search results
 visibility: public
 # see https://napari.org/stable/plugins/manifest.html for valid categories
-categories: ["Visualization"]
+categories: ["Visualization", "Utilities"]
 contributions:
   commands:
-    - id: napari-open-ctc.get_reader
+    - id: napari-open-ctc.read_ctc
       python_name: napari_open_ctc._reader:napari_get_reader
       title: Open CTC TRA/RES data
+    - id: napari-open-ctc.write_debug
+      python_name: napari_open_ctc._writer:napari_write_labels
+      title: Save labels and tracks to CTC format
+    - id: napari-open-ctc.write_multiple
+      python_name: napari_open_ctc._writer:write_multiple
+      title: Save ctc tracks
   readers:
-    - command: napari-open-ctc.get_reader
+    - command: napari-open-ctc.read_ctc
       accepts_directories: true
       filename_patterns: ["TRA", "*RES"]
+  writers:
+    - command: napari-open-ctc.write_single_labels
+      layer_types: ['labels']
+    - command: napari-open-ctc.write_multiple
+      layer_types: ['labels', 'tracks']
+      filename_extensions: []
