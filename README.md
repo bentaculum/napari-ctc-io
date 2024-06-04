@@ -5,9 +5,11 @@
 [![codecov](https://codecov.io/gh/bentaculum/napari-ctc-io/branch/main/graph/badge.svg)](https://codecov.io/gh/bentaculum/napari-ctc-io)
 [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-ctc-io)](https://napari-hub.org/plugins/napari-ctc-io)
 
-Drag and drop annotations/results in the [Cell Tracking Challenge (CTC) format](https://celltrackingchallenge.net) into napari.
+- Drag and drop annotations/results in the [Cell Tracking Challenge (CTC) format](https://celltrackingchallenge.net) into napari.
 
-Works for `TRA`, `RES`, etc. folders, which contain a time sequence of segmentations in `tiff` format, and a corresponding tracklet file `*.txt`.
+  Works for `TRA`, `RES`, etc. folders, which contain a time sequence of segmentations in `tiff` format, and a corresponding tracklet file `*.txt`.
+- Write tracked cells (`labels` layer & corresponding `tracks` layer) to CTC format (see usage below).
+
 
 https://github.com/bentaculum/napari-ctc-io/assets/8866751/197c9ea2-4115-4829-851a-4b77eb843bf2
 
@@ -24,6 +26,30 @@ To install latest development version :
 
 
     pip install git+https://github.com/bentaculum/napari-ctc-io.git
+
+## Usage of writer in widget
+
+```python
+def _save(self, event=None):
+    pm = npe2.PluginManager.instance()
+
+    outdir = "TRA"
+    writer_contrib = pm.get_writer(
+        outdir,
+        ["labels", "tracks"],
+        "napari-ctc-io",
+    )[0]
+
+    save_layers(
+        path=outdir,
+        layers=[
+            self._viewer.layers["masks_tracked"],
+            self._viewer.layers["tracks"],
+        ],
+        plugin="napari-ctc-io",
+        _writer=writer_contrib,
+    )
+```
 
 
 ## Contributing
