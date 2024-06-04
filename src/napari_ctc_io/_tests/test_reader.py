@@ -12,9 +12,5 @@ def test_reader():
     assert isinstance(layer_data_list, list) and len(layer_data_list) == 2
 
 
-# def test_get_reader_pass():
-#     reader = napari_get_reader("fake.file")
-#     assert reader is None
-
 if __name__ == "__main__":
     test_reader()
