@@ -1,29 +1,29 @@
-# napari-open-ctc
+# napari-ctc-io
 
-[![PyPI](https://img.shields.io/pypi/v/napari-open-ctc.svg?color=green)](https://pypi.org/project/napari-open-ctc)
-[![tests](https://github.com/bentaculum/napari-open-ctc/workflows/tests/badge.svg)](https://github.com/bentaculum/napari-open-ctc/actions)
-[![codecov](https://codecov.io/gh/bentaculum/napari-open-ctc/branch/main/graph/badge.svg)](https://codecov.io/gh/bentaculum/napari-open-ctc)
-[![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-open-ctc)](https://napari-hub.org/plugins/napari-open-ctc)
+[![PyPI](https://img.shields.io/pypi/v/napari-ctc-io.svg?color=green)](https://pypi.org/project/napari-ctc-io)
+[![tests](https://github.com/bentaculum/napari-ctc-io/workflows/tests/badge.svg)](https://github.com/bentaculum/napari-ctc-io/actions)
+[![codecov](https://codecov.io/gh/bentaculum/napari-ctc-io/branch/main/graph/badge.svg)](https://codecov.io/gh/bentaculum/napari-ctc-io)
+[![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-ctc-io)](https://napari-hub.org/plugins/napari-ctc-io)
 
 Drag and drop annotations/results in the [Cell Tracking Challenge (CTC) format](https://celltrackingchallenge.net) into napari.
 
 Works for `TRA`, `RES`, etc. folders, which contain a time sequence of segmentations in `tiff` format, and a corresponding tracklet file `*.txt`.
 
-https://github.com/bentaculum/napari-open-ctc/assets/8866751/197c9ea2-4115-4829-851a-4b77eb843bf2
+https://github.com/bentaculum/napari-ctc-io/assets/8866751/197c9ea2-4115-4829-851a-4b77eb843bf2
 
 
 ## Installation
 
-You can install `napari-open-ctc` via [pip]:
+You can install `napari-ctc-io` via [pip]:
 
-    pip install napari-open-ctc
+    pip install napari-ctc-io
 
 
 
 To install latest development version :
 
 
-    pip install git+https://github.com/bentaculum/napari-open-ctc.git
+    pip install git+https://github.com/bentaculum/napari-ctc-io.git
 
 
 ## Contributing
@@ -33,7 +33,7 @@ Contributions are very welcome. Tests can be run with [tox].
 ## License
 
 Distributed under the terms of the [BSD-3] license,
-`napari-open-ctc` is free and open source software.
+`napari-ctc-io` is free and open source software.
 
 ## Issues
 
@@ -50,7 +50,7 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 [Mozilla Public License 2.0]: https://www.mozilla.org/media/MPL/2.0/index.txt
 [cookiecutter-napari-plugin]: https://github.com/napari/cookiecutter-napari-plugin
 
-[file an issue]: https://github.com/bentaculum/napari-open-ctc/issues
+[file an issue]: https://github.com/bentaculum/napari-ctc-io/issues
 
 [napari]: https://github.com/napari/napari
 [tox]: https://tox.readthedocs.io/en/latest/

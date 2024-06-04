@@ -1,0 +1,21 @@
+name: napari-ctc-io
+display_name: Open/write CTC data format
+visibility: public
+# see https://napari.org/stable/plugins/manifest.html for valid categories
+categories: ["Visualization", "Utilities"]
+contributions:
+  commands:
+    - id: napari-ctc-io.read_ctc
+      python_name: napari_ctc_io._reader:napari_get_reader
+      title: Open CTC TRA/RES data
+    - id: napari-ctc-io.write_multiple
+      python_name: napari_ctc_io._writer:write_multiple
+      title: Save masks + tracks to CTC format
+  readers:
+    - command: napari-ctc-io.read_ctc
+      accepts_directories: true
+      filename_patterns: ["TRA", "*RES"]
+  writers:
+    - command: napari-ctc-io.write_multiple
+      layer_types: ['labels', 'tracks']
+      filename_extensions: []
