@@ -19,34 +19,33 @@ logger.setLevel(logging.INFO)
 
 
 def write_multiple(path: str, data: List[FullLayerData]) -> List[str]:
-    """Writes multiple layers of different types.
+    """Writes a labels and a tracks layer to CTC format.
 
-    Parameters
-    ----------
-    path : str
-        A string path indicating where to save the data file(s).
-    data : A list of layer tuples.
-        Tuples contain three elements: (data, meta, layer_type)
-        `data` is the layer data
-        `meta` is a dictionary containing all other metadata attributes
-        from the napari layer (excluding the `.data` layer attribute).
-        `layer_type` is a string, eg: "image", "labels", "surface", etc.
+    https://celltrackingchallenge.net/datasets/
 
-    Returns
-    -------
-    [path] : A list containing (potentially multiple) string paths to the saved file(s).
+    Args
+        path: Directory to save to.
+        data : A list of layer tuples.
+            Tuples contain three elements: (data, meta, layer_type)
+            `data` is the layer data
+            `meta` is a dictionary containing all other metadata attributes
+            from the napari layer (excluding the `.data` layer attribute).
+            `layer_type` is a string, eg: "image", "labels", "surface", etc.
+
+    Returns:
+        list: A list containing (potentially multiple) string paths to the saved file(s).
     """
-    logger.debug("Writing to CTC format")
+    logger.info(f"Writing CTC format to {path}")  # noqa: G004
     if len(data) != 2:
         raise ValueError("Need_two_layers to save.")
 
-    # TODO input checks
-
     masks = data[0]
     tracks = data[1]
-    # import ipdb
 
-    # ipdb.set_trace()
+    if masks[2] != "labels":
+        raise ValueError("First layer needs to be a labels layer.")
+    if tracks[2] != "tracks":
+        raise ValueError("Second layer needs to be a tracks layer.")
 
     p = Path(path).expanduser().resolve()
     p.mkdir(parents=True, exist_ok=True)
@@ -67,53 +66,15 @@ def write_multiple(path: str, data: List[FullLayerData]) -> List[str]:
         sep=" ",
     )
 
-    # return path to any file(s) that were successfully written
-    return [path]
-
-
-def napari_write_labels(path: str, data: List[FullLayerData]) -> List[str]:
-    """Writes multiple layers of different types.
-
-    Parameters
-    ----------
-    path : str
-        A string path indicating where to save the data file(s).
-    data : A list of layer tuples.
-        Tuples contain three elements: (data, meta, layer_type)
-        `data` is the layer data
-        `meta` is a dictionary containing all other metadata attributes
-        from the napari layer (excluding the `.data` layer attribute).
-        `layer_type` is a string, eg: "image", "labels", "surface", etc.
-
-    Returns
-    -------
-    [path] : A list containing (potentially multiple) string paths to the saved file(s).
-    """
-    if len(data) != 1:
-        print("Need two layers to save.")
-
-    # if data[0][2]
-    labels = data[0]
-    print("Using plugin writer")
-    # tracks = data[1]
-
-    imwrite(path, labels[0])
-
-    # res_track = tracks_to_ctc(tracks[0], tracks[1]["graph"])
-
-    # return path to any file(s) that were successfully written
     return [path]
 
 
 def tracks_to_ctc(tracks: np.ndarray, graph: dict) -> pd.DataFrame:
-    """
+    """Convert from napari.layers.Tracks to CTC format.
 
     Args:
         tracks: ID,T,(Z),Y,X.
-        graph (_type_): _description_
-
-    Returns:
-        _type_: _description_
+        graph: id: [parent]
     """
     rows = []
     # TODO Allow for gap closing

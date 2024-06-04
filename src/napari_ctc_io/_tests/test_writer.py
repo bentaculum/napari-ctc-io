@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from napari_open_ctc import napari_get_reader
+from napari_ctc_io import napari_get_reader
 
 
 def test_reader():
