@@ -1,13 +1,20 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 from tifffile import imread
 
 from napari_ctc_io import napari_get_reader, write_multiple
 
 
-def test_writer():
-    path = Path(__file__).parent / "resources" / "TRA"
+@pytest.mark.parametrize(
+    "path",
+    [
+        Path(__file__).parent / "resources" / "fluo_simulated" / "TRA",
+        Path(__file__).parent / "resources" / "edge_cases" / "TRA",
+    ],
+)
+def test_writer(path):
     reader = napari_get_reader(path)
     assert callable(reader)
 
@@ -29,6 +36,8 @@ def test_writer():
     in_tracks = np.loadtxt(list(path.glob("*.txt"))[0], delimiter=" ").astype(
         int
     )
+    # Sort tracks by id
+    in_tracks = in_tracks[in_tracks[:, 0].argsort()]
     out_tracks = np.loadtxt(
         list(out_path.glob("*.txt"))[0], delimiter=" "
     ).astype(int)
