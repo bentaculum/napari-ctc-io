@@ -13,6 +13,13 @@ logger = logging.getLogger(__name__)
 
 
 def ctc_reader(path: Path) -> Callable:
+    """Main reader.
+
+    Data format: https://celltrackingchallenge.net/datasets/
+
+    Args:
+        path: Directory with annotations/results in CTC format.
+    """
     segmentation, man_track = _load_tra(path)
     tracks, tracks_graph = _ctc_to_napari_tracks(segmentation, man_track)
     logger.debug(tracks.shape)
@@ -30,7 +37,15 @@ def ctc_reader(path: Path) -> Callable:
 def _ctc_to_napari_tracks(
     segmentation: np.ndarray, man_track: np.ndarray
 ) -> tuple[np.ndarray, dict]:
-    """Convert a traccuracy graph to napari tracks"""
+    """Convert CTC tracks to `napari.layers.Tracks`.
+
+    Args:
+        segmentation: Dense numpy array, labels correspond to `man_track`.
+        man_track: Tracks in CTC format.
+
+    Returns:
+        tuple[np.ndarray, dict]: Tracks and graph for `napari.layers.Tracks`.
+    """
 
     tracks = []
     for t, frame in progress(
