@@ -61,7 +61,9 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy:
     # this will run when you have tagged a commit, starting with "v*"
