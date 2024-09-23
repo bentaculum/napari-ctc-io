@@ -5,5 +5,6 @@ except ImportError:
 
 from ._reader import napari_get_reader
 from ._writer import write_multiple
+from .reader import read_ctc
 
-__all__ = ("napari_get_reader", "write_multiple")
+__all__ = ("napari_get_reader", "write_multiple", "read_ctc")

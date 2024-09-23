@@ -1,3 +1,4 @@
+import copy
 import logging
 from pathlib import Path
 from typing import Callable
@@ -20,6 +21,28 @@ def ctc_reader(path: Path) -> Callable:
     Args:
         path: Directory with annotations/results in CTC format.
     """
+    segmentation, tracks, tracks_graph = read_ctc(path)
+    return lambda path: [
+        (segmentation, dict(name="labels"), "labels"),  # noqa
+        (tracks, dict(graph=tracks_graph, name="tracks"), "tracks"),  # noqa
+    ]
+
+
+def read_ctc(
+    path: Path,
+    include_tracklet_links: bool = False,
+) -> tuple[np.ndarray, np.ndarray, dict]:
+    """Read CTC format into napari layers.
+
+    Args:
+        path: Folder with segmentations and tracks.
+        include_tracklet_links:
+            Include parent-child links in the `tracks`.
+            This will include parent detections twice in the `tracks` table.
+
+    Returns:
+        tuple[np.ndarray, dict]: Segmentation (for Labels layer), tracks and tracks_graph (for Tracks layer).
+    """
     segmentation, man_track = _load_tra(path)
     tracks, tracks_graph = _ctc_to_napari_tracks(segmentation, man_track)
     logger.debug(tracks.shape)
@@ -28,20 +51,30 @@ def ctc_reader(path: Path) -> Callable:
         detections=pd.DataFrame(tracks[:, :2]).astype(int),
         masks=segmentation,
     )
-    return lambda path: [
-        (segmentation, dict(name="labels"), "labels"),  # noqa
-        (tracks, dict(graph=tracks_graph, name="tracks"), "tracks"),  # noqa
-    ]
+    if include_tracklet_links:
+        # Convert again, but this time include parent-child links into `tracks`.
+        tracks, tracks_graph = _ctc_to_napari_tracks(
+            segmentation, man_track, include_tracklet_links=True
+        )
+
+    return segmentation, tracks, tracks_graph
 
 
 def _ctc_to_napari_tracks(
-    segmentation: np.ndarray, man_track: np.ndarray
+    segmentation: np.ndarray,
+    man_track: np.ndarray,
+    include_tracklet_links: bool = False,
 ) -> tuple[np.ndarray, dict]:
     """Convert CTC tracks to `napari.layers.Tracks`.
 
     Args:
-        segmentation: Dense numpy array, labels correspond to `man_track`.
-        man_track: Tracks in CTC format.
+        segmentation:
+            Dense numpy array, labels correspond to `man_track`.
+        man_track:
+            Tracks in CTC format.
+        include_tracklet_links:
+            Include parent-child links in the `tracks`.
+            This will include parent detections twice in the `tracks` table.
 
     Returns:
         tuple[np.ndarray, dict]: Tracks and graph for `napari.layers.Tracks`.
@@ -70,6 +103,15 @@ def _ctc_to_napari_tracks(
     ):
         if parent != 0:
             tracks_graph[idx] = [parent]
+            if include_tracklet_links:
+                parent_end = man_track[man_track[:, 0] == parent][0, 2]
+                parent_det = tracks[
+                    (tracks[:, 0] == parent) & (tracks[:, 1] == parent_end)
+                ]
+                start_det = copy.deepcopy(parent_det)
+                start_det[:, 0] = idx
+
+                tracks = np.vstack([tracks, start_det])
 
     return tracks, tracks_graph
 

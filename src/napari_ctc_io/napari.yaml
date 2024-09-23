@@ -1,5 +1,5 @@
 name: napari-ctc-io
-display_name: Open/write CTC data format
+display_name: Read CTC format
 visibility: public
 # see https://napari.org/stable/plugins/manifest.html for valid categories
 categories: ["Visualization", "Utilities"]
